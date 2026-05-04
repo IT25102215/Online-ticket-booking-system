@@ -8,10 +8,7 @@ import com.example.demo.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class HomeController {
@@ -68,4 +65,32 @@ public class HomeController {
         // 5. Send them back to the homepage after successful booking
         return "redirect:/?success=true";
     }
+    // Make sure your repository is wired up at the top of your controller:
+    // @Autowired
+    // private TicketOrderRepository ticketOrderRepository;
+
+    // --- 1. CREATE (Book a Ticket) ---
+    @PostMapping("/book-ticket")
+    public String bookTicket(@ModelAttribute TicketOrder ticketOrder) {
+        // Saves the new ticket to the MySQL database
+        ticketOrderRepository.save(ticketOrder);
+        return "redirect:/my-tickets"; // Sends user straight to their history page
+    }
+
+    // --- 2. READ (View My Tickets History) ---
+    @GetMapping("/my-tickets")
+    public String viewMyTickets(Model model) {
+        // Fetches all tickets from the database and sends them to the HTML
+        model.addAttribute("tickets", ticketOrderRepository.findAll());
+        return "my_tickets";
+    }
+
+    // --- 3. DELETE (Cancel a Booking) ---
+    @PostMapping("/cancel-ticket/{id}")
+    public String cancelTicket(@PathVariable Long id) {
+        // Deletes the specific ticket from the database using its ID
+        ticketOrderRepository.deleteById(id);
+        return "redirect:/my-tickets"; // Refreshes the page to show it's gone
+    }
+
 }
