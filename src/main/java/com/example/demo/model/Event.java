@@ -8,7 +8,7 @@ public class Event extends BookingEntity {
     private String eventDate;
     private double ticketPrice;
 
-    // New fields for the marketplace
+    // New fields for
     private String category; // e.g., "Movie", "Concert", "Drama"
     private String description;
     private String imageUrl;
