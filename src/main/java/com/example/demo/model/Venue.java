@@ -1,11 +1,8 @@
-// src/main/java/com/example/demo/model/Venue.java
-
 package com.example.demo.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "venues")
@@ -16,58 +13,80 @@ public class Venue {
     private Long id;
 
     @NotBlank(message = "Venue name is required")
-    @Column(nullable = false)
     private String name;
 
     @NotBlank(message = "Address is required")
-    @Column(nullable = false)
     private String address;
 
-    @NotBlank(message = "City is required")
-    private String city;
-
-    @Column(name = "postal_code")
-    private String postalCode;
-
-    @NotNull(message = "Capacity is required")
     @Min(value = 1, message = "Capacity must be at least 1")
-    @Column(nullable = false)
-    private Integer capacity;
+    private int capacity;
 
-    @Column(name = "facilities", length = 500)
-    private String facilities;
+    private String contactPerson;
+    private String phone;
 
-    // Many venues belong to one organizer
+    // Many Venues belong to One Organizer
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organizer_id", nullable = false)
     private Organizer organizer;
 
-    // Default constructor (required by JPA)
-    public Venue() {}
+    // Constructors
+    public Venue() {
+    }
 
     // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
+    public String getName() {
+        return name;
+    }
 
-    public String getCity() { return city; }
-    public void setCity(String city) { this.city = city; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getPostalCode() { return postalCode; }
-    public void setPostalCode(String postalCode) { this.postalCode = postalCode; }
+    public String getAddress() {
+        return address;
+    }
 
-    public Integer getCapacity() { return capacity; }
-    public void setCapacity(Integer capacity) { this.capacity = capacity; }
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-    public String getFacilities() { return facilities; }
-    public void setFacilities(String facilities) { this.facilities = facilities; }
+    public int getCapacity() {
+        return capacity;
+    }
 
-    public Organizer getOrganizer() { return organizer; }
-    public void setOrganizer(Organizer organizer) { this.organizer = organizer; }
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public String getContactPerson() {
+        return contactPerson;
+    }
+
+    public void setContactPerson(String contactPerson) {
+        this.contactPerson = contactPerson;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Organizer getOrganizer() {
+        return organizer;
+    }
+
+    public void setOrganizer(Organizer organizer) {
+        this.organizer = organizer;
+    }
 }
-

@@ -36,7 +36,8 @@ public class Event {
     @Column(nullable = false)
     private double ticketPrice;
 
-    @Column(length = 1000)
+    // New fields for
+    private String category; // e.g., "Movie", "Concert", "Drama"
     private String description;
 
     // Default constructor
