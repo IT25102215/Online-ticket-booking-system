@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Management Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark mb-4">
+    <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1">Online Event Ticket Booking System - Admin Panel</span>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0" th:text="${admin.id != null} ? 'Modify System Admin' : 'Register New Admin'">Register Admin</h5>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/admins/save}" th:object="${admin}" method="POST">
+                        <input type="hidden" th:field="*{id}" />
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Full Name</label>
+                            <input type="text" id="name" th:field="*{name}" class="form-control" placeholder="John Doe" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" id="username" th:field="*{username}" class="form-control" placeholder="johndoe123" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" id="email" th:field="*{email}" class="form-control" placeholder="admin@system.com" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="adminRole" class="form-label">Privilege Assignment Role</label>
+                            <select id="adminRole" th:field="*{adminRole}" class="form-select" required>
+                                <option value="" selected disabled>Choose Privilege...</option>
+                                <option value="SUPER_ADMIN">Super Admin (Full Access)</option>
+                                <option value="EVENT_MODERATOR">Event Moderator</option>
+                                <option value="TICKET_MANAGER">Ticket & Financial Manager</option>
+                            </select>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success" th:text="${admin.id != null} ? 'Update Account' : 'Save Registration'">Submit</button>
+                            <a th:if="${admin.id != null}" th:href="@{/admins}" class="btn btn-secondary">Cancel Edit</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="card-title mb-0">Active System Administrators</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover align-middle">
+                            <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Role Privileges</th>
+                                <th class="text-center">System Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:if="${#lists.isEmpty(admins)}">
+                                <td colspan="6" class="text-center text-muted py-4">No administrative profiles found in the registry database.</td>
+                            </tr>
+                            <tr th:each="adm : ${admins}">
+                                <td th:text="${adm.id}">1</td>
+                                <td th:text="${adm.name}">Name</td>
+                                <td th:text="${adm.username}">Username</td>
+                                <td th:text="${adm.email}">Email</td>
+                                <td>
+                                        <span th:text="${adm.adminRole}"
+                                              th:classappend="${adm.adminRole == 'SUPER_ADMIN'} ? 'bg-danger' : 'bg-warning text-dark'"
+                                              class="badge">ROLE</span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a th:href="@{/admins/edit/{id}(id=${adm.id})}" class="btn btn-outline-primary">Modify</a>
+                                        <a th:href="@{/admins/delete/{id}(id=${adm.id})}"
+                                           class="btn btn-outline-danger"
+                                           onclick="return confirm('Revoke account privileges and remove this administrator entirely?');">
+                                            Remove
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
