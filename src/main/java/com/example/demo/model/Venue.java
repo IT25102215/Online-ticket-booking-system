@@ -3,6 +3,7 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonIgnore; // <-- Added the Jackson Import!
 
 @Entity
 @Table(name = "venues")
@@ -27,6 +28,7 @@ public class Venue {
     // Many Venues belong to One Organizer
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organizer_id", nullable = false)
+    @JsonIgnore // <-- THE MAGIC FIX: Stops the infinite circular JSON loop!
     private Organizer organizer;
 
     // Constructors

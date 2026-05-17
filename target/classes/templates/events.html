@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Event Management</title>
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <style>
+        body { background-color: #f0f2f5; }
+        .page-header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+        .card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+        .card-header { border-radius: 12px 12px 0 0 !important; }
+        .badge-concert  { background-color: #6f42c1; }
+        .badge-sports   { background-color: #0d6efd; }
+        .badge-theater  { background-color: #d63384; }
+        .badge-other    { background-color: #6c757d; }
+        .table th { font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .btn-icon { width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+        .section-title { font-weight: 700; font-size: 1.05rem; }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════════════  PAGE HEADER  ═══════════════════════ -->
+<div class="page-header text-white py-4 mb-4">
+    <div class="container">
+        <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-calendar-event-fill fs-2"></i>
+            <div>
+                <h1 class="mb-0 fw-bold fs-3">Event Management</h1>
+                <small class="opacity-75">Online Event Ticket Booking System</small>
+            </div>
+            <a href="/" class="btn btn-outline-light ms-auto btn-sm">
+                <i class="bi bi-house-door me-1"></i>Home
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+
+    <!-- ════════════ SEARCH & FILTER BAR ════════════ -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" th:action="@{/events}" class="row g-2 align-items-end">
+                <div class="col-md-5">
+                    <label class="form-label small fw-semibold mb-1">Search by Name</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" name="search" class="form-control"
+                               placeholder="e.g. Rock Concert..."
+                               th:value="${search}" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small fw-semibold mb-1">Filter by Category</label>
+                    <select name="category" class="form-select">
+                        <option value="">All Categories</option>
+                        <option value="Concert"  th:selected="${selectedCategory == 'Concert'}">Concert</option>
+                        <option value="Sports"   th:selected="${selectedCategory == 'Sports'}">Sports</option>
+                        <option value="Theater"  th:selected="${selectedCategory == 'Theater'}">Theater</option>
+                        <option value="Other"    th:selected="${selectedCategory == 'Other'}">Other</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary flex-fill">
+                        <i class="bi bi-funnel me-1"></i>Filter
+                    </button>
+                    <a th:href="@{/events}" class="btn btn-outline-secondary flex-fill">
+                        <i class="bi bi-x-circle me-1"></i>Clear
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- ════════════ LEFT – CREATE / EDIT FORM ════════════ -->
+        <div class="col-lg-4">
+
+            <!-- ── CREATE FORM (shown when NOT editing) ── -->
+            <div class="card" th:if="${editEvent == null}">
+                <div class="card-header bg-success text-white">
+                    <span class="section-title"><i class="bi bi-plus-circle me-2"></i>Add New Event</span>
+                </div>
+                <div class="card-body">
+                    <form method="post" th:action="@{/events/save}" th:object="${newEvent}">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Event Name *</label>
+                            <input type="text" class="form-control form-control-sm"
+                                   th:field="*{name}" placeholder="e.g. Rock Night 2025" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Category *</label>
+                            <select class="form-select form-select-sm" th:field="*{category}" required>
+                                <option value="">Select category...</option>
+                                <option value="Concert">Concert</option>
+                                <option value="Sports">Sports</option>
+                                <option value="Theater">Theater</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Date *</label>
+                                <input type="date" class="form-control form-control-sm"
+                                       th:field="*{eventDate}" required />
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Time *</label>
+                                <input type="time" class="form-control form-control-sm"
+                                       th:field="*{eventTime}" required />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Venue *</label>
+                            <input type="text" class="form-control form-control-sm"
+                                   th:field="*{venue}" placeholder="e.g. Nelum Pokuna Theatre" required />
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Total Capacity *</label>
+                                <input type="number" class="form-control form-control-sm"
+                                       th:field="*{totalCapacity}" min="1" required />
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Available *</label>
+                                <input type="number" class="form-control form-control-sm"
+                                       th:field="*{availableCapacity}" min="0" required />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Ticket Price (LKR) *</label>
+                            <input type="number" step="0.01" class="form-control form-control-sm"
+                                   th:field="*{ticketPrice}" min="0" placeholder="e.g. 1500.00" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Description</label>
+                            <textarea class="form-control form-control-sm" rows="3"
+                                      th:field="*{description}" placeholder="Short event description..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="bi bi-plus-lg me-2"></i>Add Event
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ── EDIT FORM (shown when editing) ── -->
+            <div class="card border-warning" th:if="${editEvent != null}">
+                <div class="card-header bg-warning text-dark">
+                    <span class="section-title"><i class="bi bi-pencil-square me-2"></i>Edit Event</span>
+                </div>
+                <div class="card-body">
+                    <form method="post" th:action="@{/events/update}" th:object="${editEvent}">
+                        <input type="hidden" th:field="*{id}" />
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Event Name *</label>
+                            <input type="text" class="form-control form-control-sm"
+                                   th:field="*{name}" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Category *</label>
+                            <select class="form-select form-select-sm" th:field="*{category}" required>
+                                <option value="Concert">Concert</option>
+                                <option value="Sports">Sports</option>
+                                <option value="Theater">Theater</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Date *</label>
+                                <input type="date" class="form-control form-control-sm"
+                                       th:field="*{eventDate}" required />
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Time *</label>
+                                <input type="time" class="form-control form-control-sm"
+                                       th:field="*{eventTime}" required />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Venue *</label>
+                            <input type="text" class="form-control form-control-sm" th:field="*{venue}" required />
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Total Capacity *</label>
+                                <input type="number" class="form-control form-control-sm"
+                                       th:field="*{totalCapacity}" min="1" required />
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Available *</label>
+                                <input type="number" class="form-control form-control-sm"
+                                       th:field="*{availableCapacity}" min="0" required />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Ticket Price (LKR) *</label>
+                            <input type="number" step="0.01" class="form-control form-control-sm"
+                                   th:field="*{ticketPrice}" min="0" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Description</label>
+                            <textarea class="form-control form-control-sm" rows="3"
+                                      th:field="*{description}"></textarea>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-warning flex-fill">
+                                <i class="bi bi-save me-1"></i>Save Changes
+                            </button>
+                            <a th:href="@{/events}" class="btn btn-outline-secondary flex-fill">
+                                <i class="bi bi-x me-1"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════ RIGHT – EVENT LIST TABLE ════════════ -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <span class="section-title"><i class="bi bi-list-ul me-2"></i>All Events</span>
+                    <span class="badge bg-white text-primary" th:text="${#lists.size(events)} + ' events'">0 events</span>
+                </div>
+                <div class="card-body p-0">
+
+                    <!-- Empty state -->
+                    <div th:if="${#lists.isEmpty(events)}" class="text-center py-5 text-muted">
+                        <i class="bi bi-calendar-x fs-1"></i>
+                        <p class="mt-2 mb-0">No events found. Add one using the form!</p>
+                    </div>
+
+                    <!-- Events Table -->
+                    <div th:if="${!#lists.isEmpty(events)}" class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Event</th>
+                                <th>Category</th>
+                                <th>Date &amp; Time</th>
+                                <th>Venue</th>
+                                <th>Capacity</th>
+                                <th>Price</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="event, stat : ${events}"
+                                th:classappend="${editEvent != null and editEvent.id == event.id} ? 'table-warning' : ''">
+                                <td class="text-muted small" th:text="${stat.index + 1}">1</td>
+                                <td>
+                                    <div class="fw-semibold" th:text="${event.name}">Event Name</div>
+                                    <small class="text-muted" th:text="${#strings.abbreviate(event.description, 40)}"></small>
+                                </td>
+                                <td>
+                                        <span class="badge"
+                                              th:classappend="${event.category == 'Concert'} ? 'badge-concert' :
+                                                             (${event.category == 'Sports'}  ? 'badge-sports'  :
+                                                             (${event.category == 'Theater'} ? 'badge-theater' : 'badge-other'))"
+                                              th:text="${event.category}">Category</span>
+                                </td>
+                                <td class="small">
+                                    <div th:text="${event.eventDate}"></div>
+                                    <div class="text-muted" th:text="${event.eventTime}"></div>
+                                </td>
+                                <td class="small" th:text="${event.venue}">Venue</td>
+                                <td class="small">
+                                    <span th:text="${event.availableCapacity}">0</span>
+                                    <span class="text-muted">/ <span th:text="${event.totalCapacity}">0</span></span>
+                                    <div class="progress mt-1" style="height:4px;">
+                                        <div class="progress-bar bg-success"
+                                             th:style="'width:' + (${event.availableCapacity * 100 / event.totalCapacity}) + '%'"></div>
+                                    </div>
+                                </td>
+                                <td class="small fw-semibold" th:text="'LKR ' + ${#numbers.formatDecimal(event.ticketPrice, 1, 2)}">0.00</td>
+                                <td class="text-center">
+                                    <div class="d-flex gap-1 justify-content-center">
+                                        <!-- Edit button -->
+                                        <a th:href="@{/events/edit/{id}(id=${event.id})}"
+                                           class="btn btn-outline-warning btn-icon btn-sm" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <!-- Delete button -->
+                                        <form method="post"
+                                              th:action="@{/events/delete/{id}(id=${event.id})}"
+                                              onsubmit="return confirm('Delete this event? This cannot be undone.')">
+                                            <button type="submit"
+                                                    class="btn btn-outline-danger btn-icon btn-sm" title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- end right column -->
+
+    </div>
+    <!-- end row -->
+</div>
+<!-- end container -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

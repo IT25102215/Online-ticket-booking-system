@@ -33,10 +33,24 @@ public class VenueService {
         return venueRepository.findByOrganizerId(organizerId);
     }
 
-    // Update
+    // Update (Upgraded for Safety!)
     public Venue updateVenue(Long id, Venue updatedVenue) {
-        updatedVenue.setId(id);
-        return venueRepository.save(updatedVenue);
+        // 1. Fetch the existing venue from the database
+        Venue existingVenue = venueRepository.findById(id).orElse(null);
+
+        if (existingVenue != null) {
+            // 2. Set the ID to make sure we overwrite the correct row
+            updatedVenue.setId(id);
+
+            // 3. SAFETY CHECK: If the HTML form forgot the organizer, grab it from the old venue!
+            if (updatedVenue.getOrganizer() == null) {
+                updatedVenue.setOrganizer(existingVenue.getOrganizer());
+            }
+
+            // 4. Safely save
+            return venueRepository.save(updatedVenue);
+        }
+        return null; // Return null if the venue didn't exist in the first place
     }
 
     // Delete

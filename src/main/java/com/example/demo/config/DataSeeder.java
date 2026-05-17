@@ -1,7 +1,7 @@
 package com.example.demo.config;
 
-import com.example.demo.model.Event;
-import com.example.demo.repository.EventRepository;
+import com.example.demo.model.*;
+import com.example.demo.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,10 +14,16 @@ import java.util.List;
 public class DataSeeder {
 
     @Bean
-    CommandLineRunner initDatabase(EventRepository repository) {
-        return args -> {
-            if (repository.count() == 0) {
+    CommandLineRunner initDatabase(
+            EventRepository eventRepo,
+            ReviewRepository reviewRepo,
+            UserRepository userRepo,
+            OrganizerRepository organizerRepo,
+            VenueRepository venueRepo) {
 
+        return args -> {
+            // Seed Events (Restored all 4 events!)
+            if (eventRepo.count() == 0) {
                 Event e1 = new Event();
                 e1.setName("2026 World Cup");
                 e1.setEventDate(LocalDate.parse("2026-06-11"));
@@ -66,8 +72,58 @@ public class DataSeeder {
                 e4.setDescription("View All Melanie Martinez Tour Dates");
                 e4.setImageUrl("/images/pic4.jpg");
 
-                repository.saveAll(List.of(e1, e2, e3, e4));
-                System.out.println("Premium Marketplace Data Seeded!");
+                eventRepo.saveAll(List.of(e1, e2, e3, e4));
+                System.out.println("Events Seeded!");
+            }
+
+            // Seed Reviews (Sasheni)
+            if (reviewRepo.count() == 0) {
+                Review r1 = new Review();
+                r1.setEventName("2026 World Cup");
+                r1.setUserName("Kamal Perera");
+                r1.setRating(5);
+                r1.setComment("Amazing seats and great atmosphere!");
+                reviewRepo.save(r1);
+
+                System.out.println("Reviews Seeded!");
+            }
+
+            // Seed Users (Winnath)
+            if (userRepo.count() == 0) {
+                User u1 = new User();
+                u1.setFullName("Winnath Dev");
+                u1.setEmail("winnath@demo.com");
+                u1.setPhoneNumber("0771234567");
+                u1.setRole("Premium");
+                userRepo.save(u1);
+
+                System.out.println("Users Seeded!");
+            }
+
+            // Seed Organizers (Kavindu)
+            if (organizerRepo.count() == 0) {
+                Organizer o1 = new Organizer();
+                o1.setName("Live Nation LK");
+                o1.setContactPerson("Nimal Silva");
+                o1.setEmail("contact@livenation.lk");
+                o1.setPhone("0112345678");
+                organizerRepo.save(o1);
+
+                System.out.println("Organizers Seeded!");
+            }
+
+            // Seed Venues (Kavindu)
+            if (venueRepo.count() == 0) {
+                Organizer linkedOrganizer = organizerRepo.findAll().get(0);
+
+                Venue v1 = new Venue();
+                v1.setName("Sugathadasa Stadium");
+                v1.setAddress("Colombo");
+                v1.setCapacity(25000);
+                v1.setOrganizer(linkedOrganizer);
+                venueRepo.save(v1);
+
+                System.out.println("Venues Seeded!");
             }
         };
     }

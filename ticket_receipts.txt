@@ -1,0 +1,84 @@
+--- TICKET RECEIPT ---
+Date/Time: 2026-05-16T10:45:35.697607800
+Customer: Alec
+Event: Zach Williams Tickets
+Quantity: 2
+Total Paid: LKR 17000.0
+----------------------
+--- TICKET RECEIPT ---
+Date/Time: 2026-05-16T12:18:35.149663500
+Customer: jsn
+Event: 2026 World Cup
+Quantity: 2
+Total Paid: LKR 90000.0
+----------------------
+--- TICKET RECEIPT ---
+Date/Time: 2026-05-16T12:24:33.713660600
+Customer: Dinuja
+Event: 2026 World Cup
+Quantity: 2
+Total Paid: LKR 90000.0
+----------------------
+--- TICKET RECEIPT ---
+Date/Time: 2026-05-16T23:04:05.605361400
+Customer: kevin
+Event: 2026 World Cup
+Quantity: 1
+Total Paid: LKR 45000.0
+----------------------
+--- TICKET RECEIPT ---
+Date/Time: 2026-05-16T23:10:42.663970700
+Customer: Dinuja
+Event: Melanie Martinez Tickets
+Quantity: 1
+Total Paid: LKR 15000.0
+----------------------
+--- TICKET RECEIPT ---
+Date/Time: 2026-05-16T23:21:11.181872500
+Customer: MD
+Event: 2026 World Cup
+Quantity: 2
+Total Paid: LKR 90000.0
+----------------------
+--- TICKET RECEIPT ---
+Date/Time: 2026-05-17T20:32:56.074718500
+Customer: ABC
+Event: Zach Williams Tickets
+Quantity: 1
+Total Paid: LKR 8500.0
+----------------------
+--- TICKET RECEIPT ---
+Date/Time: 2026-05-17T20:33:26.785169500
+Customer: KAND
+Event: Teddy Swims Tickets
+Quantity: 3
+Total Paid: LKR 36000.0
+----------------------
+--- TICKET RECEIPT ---
+Date/Time: 2026-05-17T21:10:26.522627900
+Customer: king
+Event: 2026 World Cup
+Quantity: 2
+Total Paid: LKR 90000.0
+----------------------
+--- TICKET RECEIPT ---
+Date/Time: 2026-05-17T22:24:02.283524100
+Customer: M. Perera
+Event: 2026 World Cup
+Quantity: 1
+Total Paid: LKR 45000.0
+----------------------
+--- TICKET RECEIPT ---
+Date/Time: 2026-05-17T22:24:18.222260400
+Customer: Govinya
+Event: Zach Williams Tickets
+Quantity: 2
+Total Paid: LKR 17000.0
+----------------------
+--- TICKET RECEIPT ---
+Date/Time: 2026-05-17T22:25:58.012375500
+Customer: Aka
+Event: Melanie Martinez Tickets
+Quantity: 4
+Total Paid: LKR 60000.0
+----------------------

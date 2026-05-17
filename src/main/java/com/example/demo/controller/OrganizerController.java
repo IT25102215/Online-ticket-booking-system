@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/organizers")
-@CrossOrigin(origins = "*")   // Frontend connect කරන්න
+@CrossOrigin(origins = "*")   // Frontend connect
 public class OrganizerController {
 
     @Autowired
