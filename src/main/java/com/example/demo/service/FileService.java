@@ -15,7 +15,7 @@ public class FileService {
     public void logEventCreation(Event event) {
         try (FileWriter fw = new FileWriter("event_logs.txt", true);
              PrintWriter pw = new PrintWriter(fw)) {
-            pw.println("NEW EVENT CREATED: " + event.getEventName() + " | Date: " + event.getEventDate() + " | Price: LKR " + event.getTicketPrice());
+            pw.println("NEW EVENT CREATED: " + event.getName() + " | Date: " + event.getEventDate() + " | Price: LKR " + event.getTicketPrice());
         } catch (IOException e) {
             System.out.println("An error occurred while writing to the event file.");
         }
@@ -28,7 +28,7 @@ public class FileService {
             pw.println("--- TICKET RECEIPT ---");
             pw.println("Date/Time: " + LocalDateTime.now());
             pw.println("Customer: " + order.getCustomerName());
-            pw.println("Event: " + order.getEvent().getEventName());
+            pw.println("Event: " + order.getEvent().getName());
             pw.println("Quantity: " + order.getQuantity());
             pw.println("Total Paid: LKR " + order.getTotalPrice());
             pw.println("----------------------");

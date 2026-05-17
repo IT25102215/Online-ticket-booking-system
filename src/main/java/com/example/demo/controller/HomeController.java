@@ -22,14 +22,14 @@ public class HomeController {
     @Autowired
     private FileService fileService;
 
-    // The Main Storefront
+    // --- 1. The Main Storefront ---
     @GetMapping("/")
     public String showMarketplace(Model model) {
         model.addAttribute("events", eventRepository.findAll());
         return "index";
     }
 
-    // The Event Details / Booking Page
+    // --- 2. The Event Details / Booking Page ---
     @GetMapping("/book/{id}")
     public String viewEventDetails(@PathVariable("id") Long id, Model model) {
         Event event = eventRepository.findById(id)
@@ -38,59 +38,39 @@ public class HomeController {
         return "book_event";
     }
 
-    // NEW POST ROUTE TO HANDLE BOOKINGS
+    // --- 3. Handle Bookings (MySQL + Text File) ---
     @PostMapping("/book/confirm")
     public String confirmBooking(
             @RequestParam("eventId") Long eventId,
             @RequestParam("customerName") String customerName,
             @RequestParam("quantity") int quantity) {
 
-        // 1. Find the event in the database
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid event Id"));
 
-        // 2. Create the order and calculate the total price
         TicketOrder order = new TicketOrder();
         order.setCustomerName(customerName);
         order.setQuantity(quantity);
         order.setEvent(event);
-        order.setTotalPrice(event.getTicketPrice() * quantity); // The math logic
+        order.setTotalPrice(event.getTicketPrice() * quantity);
 
-        // 3. Save to MySQL
         ticketOrderRepository.save(order);
-
-        // 4. Save to the Text File (File Handling Marks)
         fileService.logTicketPurchase(order);
 
-        // 5. Send them back to the homepage after successful booking
         return "redirect:/?success=true";
     }
-    // Make sure your repository is wired up at the top of your controller:
-    // @Autowired
-    // private TicketOrderRepository ticketOrderRepository;
 
-    // --- 1. CREATE (Book a Ticket) ---
-    @PostMapping("/book-ticket")
-    public String bookTicket(@ModelAttribute TicketOrder ticketOrder) {
-        // Saves the new ticket to the MySQL database
-        ticketOrderRepository.save(ticketOrder);
-        return "redirect:/my-tickets"; // Sends user straight to their history page
-    }
-
-    // --- 2. READ (View My Tickets History) ---
+    // --- 4. View My Tickets History ---
     @GetMapping("/my-tickets")
     public String viewMyTickets(Model model) {
-        // Fetches all tickets from the database and sends them to the HTML
         model.addAttribute("tickets", ticketOrderRepository.findAll());
         return "my_tickets";
     }
 
-    // --- 3. DELETE (Cancel a Booking) ---
+    // --- 5. Cancel a Booking ---
     @PostMapping("/cancel-ticket/{id}")
     public String cancelTicket(@PathVariable Long id) {
-        // Deletes the specific ticket from the database using its ID
         ticketOrderRepository.deleteById(id);
-        return "redirect:/my-tickets"; // Refreshes the page to show it's gone
+        return "redirect:/my-tickets";
     }
-
 }

@@ -37,8 +37,10 @@ public class Event {
     private double ticketPrice;
 
     // New fields for
-    private String category; // e.g., "Movie", "Concert", "Drama"
     private String description;
+
+    // The new image URL field to hold our local static images!
+    private String imageUrl;
 
     // Default constructor
     public Event() {}
@@ -72,4 +74,8 @@ public class Event {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    // Getters and Setters for the image URL
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 }

@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.admin.model.Admin;
-import com.example.demo.admin.service.AdminService;
+import com.example.demo.model.Admin;
+import com.example.demo.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
